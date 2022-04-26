@@ -3,9 +3,7 @@
 
     
   <p align="center">
-    <i>
-A Instagram clone written in django :)
-    </i>
+   
   </p>
   
   <hr>
