@@ -124,6 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -157,10 +158,12 @@ GRAPHENE = {
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'rss',
+       'NAME': 'postgres',
        'USER': 'postgres',
        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1', 
+        'HOST': 'postgres', 
         'PORT': '5432',
    }
 }
+
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672/%2F'
