@@ -166,4 +166,4 @@ DATABASES = {
    }
 }
 
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbit:5672/%2F'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq//'

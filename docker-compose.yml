@@ -1,13 +1,4 @@
 services:
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:latest
-    networks:
-      - main
-    ports:
-      - "5672:5672"
-    restart: on-failure
-
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -23,7 +14,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  celery:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:latest
+    hostname: rabbitmq
+    networks:
+      - main
+    ports:
+      - "5672:5672"
+    restart: on-failure
+
+  celery_worker:
     build: .
     volumes:
       - .:/code
@@ -33,21 +34,26 @@ services:
       - app
       - rabbitmq
       - postgres
-    image: celeryworker
-    environment:
-      - C_FORCE_ROOT="true"
+    links:
+      - rabbitmq
     networks:
       - main
     restart: on-failure
 
   celery-beat:
+    container_name: celery_beat
+    hostname: celery_beat
+    links:
+      - rabbitmq
     build: .
     volumes:
       - .:/code
-    command: celery -A rssreader beat -l INFO 
-    environment:
-      - C_FORCE_ROOT="true"
+    command: celery -A rssreader beat -l INFO  
+    depends_on:
+      - app
+      - celery_worker
   app:
+  
     build: .
     command: sh -c "python manage.py migrate && gunicorn rssreader.wsgi -b 0.0.0.0:8000"
     container_name: app

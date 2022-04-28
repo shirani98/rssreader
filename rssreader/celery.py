@@ -4,7 +4,7 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rssreader.settings')
 
-app = Celery('rssreader')
+app = Celery('rssreader',broker='amqp://guest:guest@rabbitmq3:5672/')
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
